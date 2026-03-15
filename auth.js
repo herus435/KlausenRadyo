@@ -108,20 +108,56 @@ if (code) {
         document.getElementById('status').innerText = "Adım 4/4: Radyo oynatıcısı bağlanıyor...";
         
         // --- GÜNCELLENEN: Kuyruk bittiğinde çalışacak algoritma ---
+        // --- GÜNCELLENEN: Kuyruk bittiğinde çalışacak algoritma (Yedekleme Korumalı) ---
         const fetchMoreTracks = async () => {
             document.getElementById('status').innerText = "Arka planda yepyeni şarkılar bulunuyor...";
-            const newSeedSet = await analyzer.getSeedSet(); 
-            const newCandidateSet = await recommender.getRecommendations(newSeedSet);
-            const newFinalTracks = await filter.getSpotifyUris(newCandidateSet);
             
-            const newUris = [];
-            newFinalTracks.forEach(track => {
-                // Şarkı daha önce bu oturumda ÇALINMADIYSA listeye al
-                if (!sessionHistory.has(track.spotifyUri)) {
-                    sessionHistory.add(track.spotifyUri);
-                    newUris.push(track.spotifyUri);
+            try {
+                const newSeedSet = await analyzer.getSeedSet(); 
+                const newCandidateSet = await recommender.getRecommendations(newSeedSet);
+                const newFinalTracks = await filter.getSpotifyUris(newCandidateSet);
+                
+                const newUris = [];
+                newFinalTracks.forEach(track => {
+                    if (!sessionHistory.has(track.spotifyUri)) {
+                        sessionHistory.add(track.spotifyUri);
+                        newUris.push(track.spotifyUri);
+                    }
+                });
+
+                // --- YENİ EKLENEN: 0 ŞARKI GELDİYSE CAN SİMİDİNİ DEVREYE SOK ---
+                if (newUris.length === 0) {
+                    console.warn("Algoritma tıkandı (0 şarkı). Yedek çalma listesinden motor ateşleniyor...");
+                    document.getElementById('status').innerText = "Yedek hit parçalar yükleniyor...";
+                    
+                    // Spotify Top 50 Global listesinin ID'si (İstersen sevdiğin başka bir listenin ID'sini yazabilirsin)
+                    const fallbackPlaylistId = "37i9dQZEVXbMDoHDwfs2t3"; 
+                    
+                    // Şubat 2026 kurallarına göre güncellenmiş items uç noktası
+                    const fallbackResponse = await fetch(`https://api.spotify.com/v1/me/player/...?limit=5`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
+                    const fallbackData = await fallbackResponse.json();
+                    
+                    fallbackData.items.forEach(item => {
+                        // Eğer track nesnesi varsa ve daha önce çalınmadıysa ekle
+                        if (item.track && item.track.uri && !sessionHistory.has(item.track.uri)) {
+                            sessionHistory.add(item.track.uri);
+                            newUris.push(item.track.uri);
+                        }
+                    });
                 }
-            });
+
+                document.getElementById('status').innerText = "🎵 Şu an çalıyor...";
+                console.log(`${newUris.length} adet yeni şarkı kuyruğa eklendi.`);
+                return newUris;
+
+            } catch (error) {
+                console.error("Kuyruk besleme sırasında kritik hata:", error);
+                return []; // Çökmeyi önlemek için boş dizi döndür
+            }
+        };
 
             document.getElementById('status').innerText = "🎵 Şu an çalıyor...";
             console.log(`${newUris.length} adet hiç çalınmamış şarkı kuyruğa eklendi.`);
