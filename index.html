@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Akıllı Radyo</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+            color: #FFFFFF;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .player-card {
+            background: #282828;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        h1 { font-size: 26px; font-weight: 800; margin-bottom: 5px; }
+        .brand-green { color: #1DB954; }
+
+        #status {
+            font-size: 13px;
+            color: #B3B3B3;
+            margin: 15px 0 25px 0;
+            min-height: 20px;
+        }
+
+        /* --- YENİ EKLENEN: ŞU AN ÇALAN KISMI TASARIMI --- */
+        #now-playing {
+            display: none; /* Şarkı başlayana kadar gizli duracak */
+            margin-top: 10px;
+            margin-bottom: 25px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #album-art {
+            width: 200px;
+            height: 200px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            margin-bottom: 15px;
+            object-fit: cover;
+        }
+
+        #track-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Çok uzun isimleri ... ile keser */
+        }
+
+        #artist-name {
+            font-size: 15px;
+            color: #B3B3B3;
+        }
+        /* ------------------------------------------------ */
+
+        button {
+            background-color: #1DB954;
+            color: white;
+            border: none;
+            border-radius: 500px;
+            padding: 14px 0;
+            width: 100%;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover { background-color: #1ed760; transform: scale(1.04); }
+        button:active { transform: scale(0.98); }
+
+        #player-controls {
+            display: none;
+            margin-top: 10px;
+            padding-top: 25px;
+            border-top: 1px solid #404040;
+        }
+
+        .slider-container { margin-top: 25px; text-align: left; }
+        .slider-container label { font-size: 12px; color: #B3B3B3; font-weight: 600; text-transform: uppercase; }
+        input[type=range] { width: 100%; margin-top: 10px; accent-color: #1DB954; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="player-card">
+        <h1>Akıllı <span class="brand-green">Radyo</span></h1>
+        <div id="status">Bağlanmak için giriş yapın...</div>
+        
+        <button id="login-btn">Spotify ile Giriş Yap</button>
+
+        <div id="now-playing">
+            <img id="album-art" src="" alt="Albüm Kapağı">
+            <div id="track-name">Şarkı Adı</div>
+            <div id="artist-name">Sanatçı Adı</div>
+        </div>
+
+        <div id="player-controls">
+            <button id="play-radio-btn">📻 Yayını Başlat</button>
+            
+            <div class="slider-container">
+                <label for="volume-slider">Ses Seviyesi</label>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.5">
+            </div>
+        </div>
+    </div>
+
+    <script src="analyzer.js"></script>
+    <script src="recommender.js"></script>
+    <script src="filter.js"></script>
+    <script src="player.js"></script>
+    <script src="auth.js"></script>
+
+</body>
+</html>
