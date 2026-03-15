@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI0Q4NUEzMCIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2cHgiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IndoaXRlIj5LPC90ZXh0Pgo8L3N2Zz4=">
+<title>Klausen Radyo</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --coral: #D85A30;
+  --coral-dark: #993C1D;
+  --bg: #0a0a0a;
+  --bg2: #111;
+  --bg3: #1a1a1a;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #f0ede8;
+  --text2: #888880;
+  --text3: #444440;
+  --mono: 'Space Mono', monospace;
+  --display: 'Syne', sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--display);
+  min-height: 100vh;
+}
+
+/* grain */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 999;
+}
+
+.app {
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 5rem;
+}
+
+/* ── HEADER ── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+}
+
+.logo { font-size: 30px; font-weight: 800; letter-spacing: -2px; line-height: 1; }
+.logo em { color: var(--coral); font-style: normal; }
+
+.live {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0.5px solid rgba(216,90,48,0.35);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--coral);
+}
+
+.live-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--coral);
+  animation: blink 1.4s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.1} }
+
+/* ── SHARED ── */
+.label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--text3);
+  margin-bottom: 12px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 15px;
+  background: var(--coral);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.btn-primary:hover { background: var(--coral-dark); }
+.btn-primary:active { transform: scale(0.99); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.error {
+  background: rgba(224,74,74,0.1);
+  border: 0.5px solid rgba(224,74,74,0.3);
+  border-radius: 10px;
+  padding: 0.875rem 1rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: #f09595;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  display: none;
+}
+
+/* ── AUTH ── */
+#authScreen { text-align: center; padding: 3rem 0; }
+
+.auth-icon { font-size: 48px; display: block; margin-bottom: 1.5rem; }
+.auth-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
+.auth-sub { font-size: 13px; color: var(--text2); font-family: var(--mono); line-height: 1.7; margin-bottom: 2rem; }
+
+.spotify-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #1DB954;
+  color: #000;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.1s;
+}
+.spotify-btn:hover { background: #1ed760; transform: scale(1.03); }
+
+/* ── SETUP ── */
+#setupScreen { display: none; }
+
+.mode-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1.75rem;
+}
+
+.mode-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 14px 8px;
+  border: 0.5px solid var(--border2);
+  border-radius: 12px;
+  background: var(--bg2);
+  cursor: pointer;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text2);
+  transition: all 0.15s;
+}
+.mode-btn .icon { font-size: 18px; }
+.mode-btn .sub { font-size: 10px; font-family: var(--mono); opacity: 0.5; }
+.mode-btn:hover { border-color: var(--coral); color: var(--text); }
+.mode-btn.active { background: rgba(216,90,48,0.1); border-color: var(--coral); color: var(--coral); }
+
+/* auto info box */
+.info-box {
+  background: var(--bg2);
+  border: 0.5px solid var(--border2);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-desc {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.65;
+  margin-top: 0.875rem;
+  font-family: var(--mono);
+}
+
+/* top tracks list */
+.top-list { display: flex; flex-direction: column; gap: 8px; }
+
+.top-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-thumb {
+  width: 36px; height: 36px;
+  border-radius: 6px;
+  background: var(--bg3);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.top-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.top-name { font-size: 13px; font-weight: 600; }
+.top-artist { font-size: 11px; color: var(--text2); font-family: var(--mono); }
+
+/* genre chips */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 1.5rem;
+}
+
+.chip {
+  padding: 7px 14px;
+  border: 0.5px solid var(--border2);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+  background: var(--bg2);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--display);
+}
+.chip:hover { border-color: var(--coral); color: var(--text); }
+.chip.active { background: var(--coral); border-color: var(--coral); color: #fff; }
+
+/* recently played preview */
+.recent-list { display: flex; flex-direction: column; gap: 8px; }
+
+/* ── LOADING ── */
+#loadingScreen {
+  display: none;
+  text-align: center;
+  padding: 5rem 0;
+}
+#loadingScreen.show { display: block; }
+
+.spinner {
+  width: 36px; height: 36px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--coral);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1.25rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-txt {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+  letter-spacing: 1px;
+}
+
+/* ── PLAYER ── */
+#playerScreen { display: none; }
+
+.album-wrap {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  background: var(--bg3);
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+.album-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.album-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  opacity: 0.15;
+}
+
+.track-name {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.track-artist {
+  font-size: 13px;
+  color: var(--text2);
+  font-family: var(--mono);
+  margin-bottom: 1.25rem;
+}
+
+/* waveform */
+.waveform {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 24px;
+  margin-bottom: 1.25rem;
+}
+.bar {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--coral);
+  opacity: 0.55;
+  animation: wave 1s ease-in-out infinite;
+}
+@keyframes wave { 0%,100%{transform:scaleY(0.2)} 50%{transform:scaleY(1)} }
+.bar:nth-child(2){animation-delay:.07s} .bar:nth-child(3){animation-delay:.14s}
+.bar:nth-child(4){animation-delay:.21s} .bar:nth-child(5){animation-delay:.1s}
+.bar:nth-child(6){animation-delay:.17s} .bar:nth-child(7){animation-delay:.04s}
+.bar:nth-child(8){animation-delay:.25s} .bar:nth-child(9){animation-delay:.12s}
+.bar:nth-child(10){animation-delay:.19s} .bar:nth-child(11){animation-delay:.08s}
+.bar:nth-child(12){animation-delay:.22s}
+.waveform.paused .bar { animation: none; transform: scaleY(0.2); opacity: 0.2; }
+
+/* progress */
+.prog-wrap { margin-bottom: 1.5rem; }
+.prog-bar {
+  height: 3px;
+  background: var(--bg3);
+  border-radius: 2px;
+  cursor: pointer;
+  margin-bottom: 7px;
+}
+.prog-fill {
+  height: 100%;
+  background: var(--coral);
+  border-radius: 2px;
+  transition: width 0.5s linear;
+  pointer-events: none;
+}
+.time-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+}
+
+/* controls */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.ctrl {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 0.5px solid var(--border2);
+  background: var(--bg2);
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.15s;
+}
+.ctrl:hover { border-color: var(--coral); color: var(--coral); }
+
+.play-btn {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  border: none;
+  background: var(--coral);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  transition: all 0.15s;
+}
+.play-btn:hover { background: var(--coral-dark); transform: scale(1.05); }
+.play-btn:active { transform: scale(0.97); }
+
+
+/* volume */
+.vol-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+.vol-row span { font-size: 14px; color: var(--text3); }
+.vol-row input[type=range] {
+  flex: 1;
+  appearance: none;
+  height: 3px;
+  background: var(--bg3);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+.vol-row input[type=range]::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--coral);
+}
+
+/* queue */
+.queue-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.back-btn {
+  background: none;
+  border: 0.5px solid var(--border2);
+  border-radius: 999px;
+  padding: 5px 14px;
+  color: var(--text2);
+  font-family: var(--mono);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.back-btn:hover { border-color: var(--coral); color: var(--coral); }
+
+.queue { border-top: 0.5px solid var(--border); }
+.q-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 0.5px solid var(--border);
+  cursor: pointer;
+  opacity: 0.45;
+  transition: opacity 0.2s;
+}
+.q-item:hover { opacity: 0.8; }
+.q-item.active { opacity: 1; }
+.q-num { font-family: var(--mono); font-size: 11px; color: var(--text3); min-width: 18px; text-align: right; }
+.q-item.active .q-num { color: var(--coral); }
+.q-thumb { width: 38px; height: 38px; border-radius: 6px; background: var(--bg3); overflow: hidden; flex-shrink: 0; }
+.q-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.q-info { flex: 1; overflow: hidden; }
+.q-track { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.q-artist { font-size: 11px; color: var(--text2); font-family: var(--mono); }
+.q-dur { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+
+/* toast */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--bg3);
+  border: 0.5px solid var(--border2);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+  transition: transform 0.3s;
+  z-index: 100;
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <svg width="160" height="52" viewBox="0 0 160 52" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="160" height="38" rx="4" fill="#D85A30"/>
+        <text x="80" y="27" text-anchor="middle" font-family="'Syne', sans-serif" font-size="20px" font-weight="800" fill="#fff" letter-spacing="-1px">KLAUSEN</text>
+        <text x="80" y="48" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8px" fill="#D85A30" letter-spacing="5px">R A D Y O</text>
+      </svg>
+    </div>
+    <div class="live"><div class="live-dot"></div>CANLI</div>
+  </div>
+
+  <!-- AUTH -->
+  <div id="authScreen">
+    <span class="auth-icon">📻</span>
+    <div class="auth-title">Radyonu başlat</div>
+    <div class="auth-sub">Spotify hesabınla giriş yap.<br>Radyon seni tanır, kendisi çalar.</div>
+    <div class="error" id="authError"></div>
+    <button class="spotify-btn" onclick="spotifyLogin()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+      </svg>
+      Spotify ile Giriş Yap
+    </button>
+  </div>
+
+  <!-- SETUP -->
+  <div id="setupScreen">
+    <div class="mode-row">
+      <button class="mode-btn active" id="modeAuto" onclick="setMode('auto')">
+        <span class="icon">✨</span>
+        <span>otomatik</span>
+        <span class="sub">dinleme geçmişinden</span>
+      </button>
+      <button class="mode-btn" id="modeManual" onclick="setMode('manual')">
+        <span class="icon">🎛</span>
+        <span>manuel</span>
+        <span class="sub">kendin seç</span>
+      </button>
+    </div>
+
+    <!-- AUTO INFO -->
+    <div id="autoInfo">
+      <div class="info-box">
+        <div class="label">— son çaldıkların</div>
+        <div class="top-list" id="topList">
+          <div style="font-size:12px;color:var(--text3);font-family:var(--mono)">yükleniyor...</div>
+        </div>
+        <div class="info-desc">Bu sanatçıların albümlerinden henüz duymadığın şarkılarla bir istasyon oluşturulacak.</div>
+      </div>
+    </div>
+
+    <!-- MANUAL OPTIONS -->
+    <div id="manualOptions" style="display:none">
+      <div class="label">— müzik türü</div>
+      <div class="chips" id="genreChips">
+        <button class="chip active" onclick="toggleChip(this)">türkçe rock</button>
+        <button class="chip" onclick="toggleChip(this)">türkçe pop</button>
+        <button class="chip" onclick="toggleChip(this)">arabesk</button>
+        <button class="chip" onclick="toggleChip(this)">indie</button>
+        <button class="chip" onclick="toggleChip(this)">caz</button>
+        <button class="chip" onclick="toggleChip(this)">elektronik</button>
+        <button class="chip" onclick="toggleChip(this)">klasik</button>
+        <button class="chip" onclick="toggleChip(this)">hip-hop</button>
+        <button class="chip" onclick="toggleChip(this)">halk müziği</button>
+        <button class="chip" onclick="toggleChip(this)">80s / 90s</button>
+      </div>
+
+      <div class="label">— on yıl</div>
+      <div class="chips" id="decadeChips">
+        <button class="chip" onclick="toggleChip(this)">70s</button>
+        <button class="chip" onclick="toggleChip(this)">80s</button>
+        <button class="chip active" onclick="toggleChip(this)">90s</button>
+        <button class="chip active" onclick="toggleChip(this)">2000s</button>
+        <button class="chip" onclick="toggleChip(this)">2010s</button>
+        <button class="chip" onclick="toggleChip(this)">güncel</button>
+      </div>
+    </div>
+
+    <div class="error" id="setupError"></div>
+    <button class="btn-primary" onclick="generateStation()">🎙 istasyonu başlat</button>
+  </div>
+
+  <!-- LOADING -->
+  <div id="loadingScreen">
+    <div class="spinner"></div>
+    <div class="loading-txt" id="loadingTxt">hazırlanıyor...</div>
+  </div>
+
+  <!-- PLAYER -->
+  <div id="playerScreen">
+    <div class="album-wrap">
+      <div class="album-placeholder">🎵</div>
+      <img id="albumImg" src="" alt="">
+    </div>
+
+    <div class="track-name" id="trackName">—</div>
+    <div class="track-artist" id="trackArtist">—</div>
+
+    <div class="waveform paused" id="waveform">
+      <div class="bar" style="height:12px"></div><div class="bar" style="height:20px"></div>
+      <div class="bar" style="height:8px"></div><div class="bar" style="height:18px"></div>
+      <div class="bar" style="height:24px"></div><div class="bar" style="height:14px"></div>
+      <div class="bar" style="height:20px"></div><div class="bar" style="height:10px"></div>
+      <div class="bar" style="height:22px"></div><div class="bar" style="height:16px"></div>
+      <div class="bar" style="height:12px"></div><div class="bar" style="height:18px"></div>
+    </div>
+
+    <div class="prog-wrap">
+      <div class="prog-bar" onclick="seekTo(event)">
+        <div class="prog-fill" id="progFill" style="width:0%"></div>
+      </div>
+      <div class="time-row">
+        <span id="timeElapsed">0:00</span>
+        <span id="timeDuration">0:00</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="ctrl" onclick="prevTrack()">◀◀</div>
+      <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+      <div class="ctrl" onclick="nextTrack()">▶▶</div>
+    </div>
+
+    <div class="vol-row">
+      <span>🔈</span>
+      <input type="range" min="0" max="100" value="70" oninput="setVol(this.value)">
+      <span>🔊</span>
+    </div>
+
+    <div class="queue-header" id="queueHeader">
+      <div class="label" style="margin:0">— sıradakiler</div>
+      <button class="back-btn" onclick="backToSetup()">← düzenle</button>
+    </div>
+    <div class="queue" id="queue"></div>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+// ⚙️  KENDİ BİLGİLERİNİ GİR
+// ══════════════════════════════════════════
+const CLIENT_ID    = 'BURAYA_CLIENT_ID_YAZ';
+const REDIRECT_URI = 'https://KULLANICI_ADIN.github.io/klausen-radyo';
+// ══════════════════════════════════════════
+
+const SCOPES = [
+  'streaming',
+  'user-read-email',
+  'user-read-private',
+  'user-read-playback-state',
+  'user-modify-playback-state',
+  'user-top-read',
+  'user-read-recently-played',
+].join(' ');
+
+// Tür → arama sorgusu
+const GENRE_QUERIES = {
+  'türkçe rock': ['Duman', 'Mor ve Ötesi', 'Athena', 'Teoman', 'Hayko Cepkin', 'Gripin', 'Koray Avcı'],
+  'türkçe pop':  ['Tarkan', 'Sezen Aksu', 'Nilüfer', 'Sertab Erener', 'Kenan Doğulu'],
+  'arabesk':     ['Orhan Gencebay', 'İbrahim Tatlıses', 'Müslüm Gürses', 'Ferdi Tayfur'],
+  'indie':       ['Arctic Monkeys', 'Radiohead', 'The Strokes', 'Interpol', 'Beach House'],
+  'caz':         ['Miles Davis', 'Bill Evans', 'John Coltrane', 'Chet Baker'],
+  'elektronik':  ['Daft Punk', 'Bonobo', 'Four Tet', 'Moderat'],
+  'klasik':      ['Chopin', 'Debussy', 'Mozart', 'Bach', 'Satie'],
+  'hip-hop':     ['Kendrick Lamar', 'J. Cole', 'Jay-Z', 'Nas'],
+  'halk müziği': ['Zülfü Livaneli', 'Cem Karaca', 'Barış Manço', 'Neşet Ertaş'],
+  '80s / 90s':   ['Depeche Mode', 'The Cure', 'Nirvana', 'Pearl Jam', 'R.E.M.']
+};
+
+const DECADE_YEAR = {
+  '70s':'1970-1979','80s':'1980-1989','90s':'1990-1999',
+  '2000s':'2000-2009','2010s':'2010-2019','güncel':'2020-2025'
+};
+
+// ── STATE ──
+let accessToken  = null;
+let refreshToken = null;
+let tokenExpiry  = 0;
+let player       = null;
+let deviceId     = null;
+let playlist     = [];
+let currentIdx   = 0;
+let isPlaying    = false;
+let progTimer    = null;
+let currentMode  = 'auto';
+let topArtists   = [];
+
+// ── PKCE ──
+function randStr() {
+  const a = new Uint8Array(64);
+  crypto.getRandomValues(a);
+  return btoa(String.fromCharCode(...a)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
+}
+
+async function pkceChallenge(v) {
+  const d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(v));
+  return btoa(String.fromCharCode(...new Uint8Array(d))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
+}
+
+async function spotifyLogin() {
+  const v = randStr();
+  const c = await pkceChallenge(v);
+  localStorage.setItem('pkce_v', v);
+  window.location.href = 'https://accounts.spotify.com/authorize?' + new URLSearchParams({
+    client_id: CLIENT_ID,
+    response_type: 'code',
+    redirect_uri: REDIRECT_URI,
+    scope: SCOPES,
+    code_challenge_method: 'S256',
+    code_challenge: c
+  });
+}
+
+async function handleCallback(code) {
+  const v = localStorage.getItem('pkce_v');
+  if (!v) { showErr('authError', 'Oturum süresi doldu, tekrar dene.'); return; }
+
+  const res = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: REDIRECT_URI,
+      client_id: CLIENT_ID,
+      code_verifier: v
+    })
+  });
+
+  const txt = await res.text();
+  let d;
+  try { d = JSON.parse(txt); } catch { showErr('authError', 'Spotify yanıt vermedi.'); return; }
+
+  if (d.access_token) {
+    saveTokens(d);
+    localStorage.removeItem('pkce_v');
+    window.history.replaceState({}, '', window.location.pathname);
+    showSetup();
+  } else {
+    showErr('authError', d.error_description || JSON.stringify(d));
+  }
+}
+
+function saveTokens(d) {
+  accessToken  = d.access_token;
+  if (d.refresh_token) { refreshToken = d.refresh_token; localStorage.setItem('sp_refresh', refreshToken); }
+  tokenExpiry = Date.now() + (d.expires_in - 60) * 1000;
+  localStorage.setItem('sp_token',  accessToken);
+  localStorage.setItem('sp_expiry', tokenExpiry);
+}
+
+async function ensureFreshToken() {
+  if (Date.now() < tokenExpiry) return;
+  const rt = refreshToken || localStorage.getItem('sp_refresh');
+  if (!rt) { localStorage.clear(); window.location.reload(); return; }
+
+  const res = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ grant_type: 'refresh_token', refresh_token: rt, client_id: CLIENT_ID })
+  });
+  const d = await res.json();
+  if (d.access_token) { saveTokens(d); }
+  else { localStorage.clear(); window.location.reload(); }
+}
+
+// Tüm Spotify API çağrıları bu fonksiyondan geçer
+async function api(url, opts = {}) {
+  await ensureFreshToken();
+  const headers = { Authorization: 'Bearer ' + accessToken, ...opts.headers };
+  const res = await fetch(url, { ...opts, headers });
+  if (res.status === 204) return null;
+  if (!res.ok) {
+    const e = await res.json().catch(() => ({}));
+    throw new Error(e?.error?.message || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+// ── SCREENS ──
+function showSetup() {
+  document.getElementById('authScreen').style.display  = 'none';
+  document.getElementById('setupScreen').style.display = 'block';
+  loadTopTracks();
+}
+
+function showPlayer() {
+  document.getElementById('setupScreen').style.display   = 'none';
+  document.getElementById('loadingScreen').classList.remove('show');
+  document.getElementById('playerScreen').style.display  = 'block';
+}
+
+function backToSetup() {
+  player?.pause();
+  isPlaying = false;
+  clearInterval(progTimer);
+  document.getElementById('playerScreen').style.display  = 'none';
+  document.getElementById('setupScreen').style.display   = 'block';
+}
+
+function setLoading(txt) {
+  document.getElementById('loadingTxt').textContent = txt;
+}
+
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 7000);
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ── SETUP UI ──
+function setMode(m) {
+  currentMode = m;
+  document.getElementById('modeAuto').classList.toggle('active', m === 'auto');
+  document.getElementById('modeManual').classList.toggle('active', m === 'manual');
+  document.getElementById('autoInfo').style.display      = m === 'auto' ? 'block' : 'none';
+  document.getElementById('manualOptions').style.display = m === 'manual' ? 'block' : 'none';
+}
+
+function toggleChip(el) { el.classList.toggle('active'); }
+
+// ── TOP TRACKS → sanatçıları göster ──
+async function loadTopTracks() {
+  try {
+    // Önce top tracks al, sanatçı isimlerini çıkar
+    const data = await api('https://api.spotify.com/v1/me/top/tracks?limit=10&time_range=short_term');
+    if (!data?.items?.length) {
+      document.getElementById('topList').innerHTML = '<div style="font-size:11px;color:var(--text3);font-family:var(--mono)">Yeterli geçmiş yok — manuel modu kullan.</div>';
+      return;
+    }
+
+    topArtists = [...new Map(
+      data.items.flatMap(t => t.artists.map(a => [a.id, { id: a.id, name: a.name }]))
+    ).values()].slice(0, 5);
+
+    const html = data.items.slice(0, 5).map(t => `
+      <div class="top-item">
+        <div class="top-thumb">${t.album?.images?.[2]?.url ? `<img src="${t.album.images[2].url}">` : ''}</div>
+        <div>
+          <div class="top-name">${t.name}</div>
+          <div class="top-artist">${t.artists.map(a => a.name).join(', ')}</div>
+        </div>
+      </div>`).join('');
+
+    document.getElementById('topList').innerHTML = html;
+  } catch (e) {
+    document.getElementById('topList').innerHTML = `<div style="font-size:11px;color:var(--text3);font-family:var(--mono)">${e.message}</div>`;
+  }
+}
+
+// ── GENERATE STATION ──
+async function generateStation() {
+  document.getElementById('setupScreen').style.display = 'none';
+  document.getElementById('loadingScreen').classList.add('show');
+
+  try {
+    let tracks = [];
+
+    if (currentMode === 'auto') {
+      if (!topArtists.length) throw new Error('Geçmiş yüklenemedi. Manuel modu dene.');
+      setLoading('sanatçı albümleri taranıyor...');
+      tracks = await buildAutoPlaylist(topArtists);
+    } else {
+      const genres  = [...document.querySelectorAll('#genreChips .chip.active')].map(c => c.textContent.trim());
+      const decades = [...document.querySelectorAll('#decadeChips .chip.active')].map(c => c.textContent.trim());
+      if (!genres.length) {
+        document.getElementById('loadingScreen').classList.remove('show');
+        document.getElementById('setupScreen').style.display = 'block';
+        showErr('setupError', 'En az bir tür seç.');
+        return;
+      }
+      setLoading('şarkılar aranıyor...');
+      tracks = await buildManualPlaylist(genres, decades);
+    }
+
+    if (!tracks.length) {
+      document.getElementById('loadingScreen').classList.remove('show');
+      document.getElementById('setupScreen').style.display = 'block';
+      showErr('setupError', 'Şarkı bulunamadı. Farklı seçimler dene.');
+      return;
+    }
+
+    playlist   = tracks;
+    currentIdx = 0;
+    setLoading('player bağlanıyor...');
+    await initPlayer();
+
+  } catch (e) {
+    document.getElementById('loadingScreen').classList.remove('show');
+    document.getElementById('setupScreen').style.display = 'block';
+    showErr('setupError', 'Hata: ' + e.message);
+  }
+}
+
+// Otomatik mod: sanatçı albümleri → şarkılar
+async function buildAutoPlaylist(artists) {
+  // Top tracks'ten bilinen şarkı ID'leri
+  let knownIds = new Set();
+  try {
+    const top = await api('https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=long_term');
+    top?.items?.forEach(t => knownIds.add(t.id));
+    const recent = await api('https://api.spotify.com/v1/me/player/recently-played?limit=50');
+    recent?.items?.forEach(i => knownIds.add(i.track.id));
+  } catch {}
+
+  let allTracks = [];
+
+  for (const artist of artists.slice(0, 3)) {
+    try {
+      // Sanatçının albümlerini çek
+      const albumData = await api(
+        `https://api.spotify.com/v1/artists/${artist.id}/albums?include_groups=album,single&limit=10`
+      );
+      if (!albumData?.items?.length) continue;
+
+      // Her albümden birkaç şarkı çek
+      for (const album of albumData.items.slice(0, 4)) {
+        const trackData = await api(`https://api.spotify.com/v1/albums/${album.id}/tracks?limit=10`);
+        if (trackData?.items) {
+          // Track objesini zenginleştir (album art için)
+          const enriched = trackData.items.map(t => ({ ...t, album }));
+          allTracks = [...allTracks, ...enriched];
+        }
+      }
+    } catch {}
+  }
+
+  // Bilinen şarkıları çıkar — sıralı bırak (albüm/sanatçı sırası korunur)
+  return allTracks
+    .filter(t => !knownIds.has(t.id))
+    .slice(0, 30);
+}
+
+// Manuel mod: tür + dönem → search
+async function buildManualPlaylist(genres, decades) {
+  const artists = genres.flatMap(g => GENRE_QUERIES[g] || []).sort(() => Math.random() - 0.5).slice(0, 4);
+  const yearFilter = decades.length ? (' year:' + (DECADE_YEAR[decades[0]] || '')) : '';
+  let allTracks = [];
+  const seen = new Set();
+
+  for (const artist of artists) {
+    try {
+      const q = encodeURIComponent(artist + yearFilter);
+      // Search API max 10 sonuç — offset ile sayfalama
+      for (let offset = 0; offset <= 10; offset += 10) {
+        const data = await api(
+          `https://api.spotify.com/v1/search?q=${q}&type=track&limit=10&offset=${offset}`
+        );
+        if (!data?.tracks?.items?.length) break;
+        data.tracks.items.forEach(t => {
+          if (!seen.has(t.id)) { seen.add(t.id); allTracks.push(t); }
+        });
+      }
+    } catch {}
+  }
+
+  return allTracks.sort(() => Math.random() - 0.5).slice(0, 25);
+}
+
+// ── WEB PLAYBACK SDK ──
+async function initPlayer() {
+  if (!window.Spotify) await loadSDK();
+  createPlayer();
+}
+
+function loadSDK() {
+  return new Promise(resolve => {
+    window.onSpotifyWebPlaybackSDKReady = resolve;
+    const s = document.createElement('script');
+    s.src = 'https://sdk.scdn.co/spotify-player.js';
+    document.head.appendChild(s);
+  });
+}
+
+function createPlayer() {
+  player = new Spotify.Player({
+    name: 'Klausen Radyo',
+    getOAuthToken: async cb => {
+      await ensureFreshToken();
+      cb(accessToken);
+    },
+    volume: 0.7
+  });
+
+  player.addListener('ready', ({ device_id }) => {
+    deviceId = device_id;
+    renderQueue();
+    showPlayer();
+    playTrack(0);
+  });
+
+  player.addListener('not_ready', () => toast('Bağlantı kesildi'));
+
+  player.addListener('player_state_changed', state => {
+    if (!state) return;
+    isPlaying = !state.paused;
+    document.getElementById('playBtn').textContent = isPlaying ? '⏸' : '▶';
+    document.getElementById('waveform').classList.toggle('paused', !isPlaying);
+
+    if (isPlaying) startProgTimer();
+    else clearInterval(progTimer);
+
+    // Şarkı bitişi: position=0 + paused + next_tracks boş
+    if (state.paused && state.position === 0 && !state.loading
+        && state.track_window?.next_tracks?.length === 0) {
+      setTimeout(() => nextTrack(), 800);
+    }
+  });
+
+  player.addListener('initialization_error', ({ message }) => {
+    document.getElementById('loadingScreen').classList.remove('show');
+    document.getElementById('setupScreen').style.display = 'block';
+    showErr('setupError', 'Player başlatılamadı: ' + message);
+  });
+
+  player.addListener('authentication_error', ({ message }) => {
+    document.getElementById('loadingScreen').classList.remove('show');
+    document.getElementById('setupScreen').style.display = 'block';
+    showErr('setupError', 'Kimlik doğrulama hatası: ' + message);
+  });
+
+  player.addListener('account_error', () => {
+    document.getElementById('loadingScreen').classList.remove('show');
+    document.getElementById('playerScreen').style.display = 'none';
+    document.getElementById('setupScreen').style.display = 'block';
+    showErr('setupError', 'Spotify Premium gerekli.');
+  });
+
+  player.connect();
+}
+
+async function playTrack(idx) {
+  if (!deviceId || !playlist[idx]) return;
+  currentIdx = idx;
+  const track = playlist[idx];
+
+  try {
+    await api(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uris: [track.uri] })
+    });
+    updateTrackUI(track);
+    highlightQueue(idx);
+    document.getElementById('progFill').style.width = '0%';
+    document.getElementById('timeElapsed').textContent = '0:00';
+  } catch (e) {
+    toast('Çalma hatası: ' + e.message);
+  }
+}
+
+function updateTrackUI(track) {
+  document.getElementById('trackName').textContent    = track.name;
+  document.getElementById('trackArtist').textContent  = track.artists.map(a => a.name).join(', ');
+  document.getElementById('timeDuration').textContent = msToTime(track.duration_ms);
+
+  const img    = document.getElementById('albumImg');
+  const artUrl = track.album?.images?.[0]?.url;
+  if (artUrl) {
+    img.onload = () => { img.style.opacity = 1; };
+    img.src = artUrl;
+  } else {
+    img.style.opacity = 0;
+  }
+
+  // Media Session API — kilit ekranı kontrolü
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title:  track.name,
+      artist: track.artists.map(a => a.name).join(', '),
+      album:  track.album?.name || '',
+      artwork: track.album?.images?.map(img => ({
+        src:   img.url,
+        sizes: `${img.width || 640}x${img.height || 640}`,
+        type:  'image/jpeg'
+      })) || []
+    });
+
+    navigator.mediaSession.setActionHandler('play',         () => player?.resume());
+    navigator.mediaSession.setActionHandler('pause',        () => player?.pause());
+    navigator.mediaSession.setActionHandler('nexttrack',    () => nextTrack());
+    navigator.mediaSession.setActionHandler('previoustrack',() => prevTrack());
+  }
+}
+
+function startProgTimer() {
+  clearInterval(progTimer);
+  progTimer = setInterval(async () => {
+    if (!player) return;
+    const state = await player.getCurrentState();
+    if (!state) return;
+    const { position, duration } = state;
+    document.getElementById('progFill').style.width   = duration > 0 ? (position / duration * 100).toFixed(1) + '%' : '0%';
+    document.getElementById('timeElapsed').textContent = msToTime(position);
+    // Şarkı bitmeden 1 sn önce geçiş
+    if (position > 0 && duration > 0 && duration - position < 1000) {
+      clearInterval(progTimer);
+      setTimeout(() => nextTrack(), 600);
+    }
+  }, 500);
+}
+
+async function togglePlay() { player?.togglePlay(); }
+async function nextTrack()  { await playTrack((currentIdx + 1) % playlist.length); }
+async function prevTrack()  { await playTrack((currentIdx - 1 + playlist.length) % playlist.length); }
+
+async function seekTo(e) {
+  if (!player) return;
+  const bar  = e.currentTarget;
+  const pct  = (e.clientX - bar.getBoundingClientRect().left) / bar.offsetWidth;
+  const state = await player.getCurrentState();
+  if (state) player.seek(Math.floor(pct * state.duration));
+}
+
+async function setVol(v) { player?.setVolume(v / 100); }
+
+// ── QUEUE ──
+function renderQueue() {
+  // Otomatik modda kuyruğu gizle — radyo sürprizi kalsın
+  const isAuto = currentMode === 'auto';
+  document.getElementById('queueHeader').style.display = isAuto ? 'none' : 'flex';
+  document.getElementById('queue').style.display       = isAuto ? 'none' : 'block';
+
+  if (!isAuto) {
+    document.getElementById('queue').innerHTML = playlist.map((t, i) => `
+      <div class="q-item${i === currentIdx ? ' active' : ''}" id="qi${i}" onclick="playTrack(${i})">
+        <div class="q-num">${i + 1}</div>
+        <div class="q-thumb">${t.album?.images?.[2]?.url ? `<img src="${t.album.images[2].url}">` : ''}</div>
+        <div class="q-info">
+          <div class="q-track">${t.name}</div>
+          <div class="q-artist">${t.artists.map(a => a.name).join(', ')}</div>
+        </div>
+        <div class="q-dur">${msToTime(t.duration_ms)}</div>
+      </div>`).join('');
+  }
+}
+
+function highlightQueue(idx) {
+  document.querySelectorAll('.q-item').forEach((el, i) => el.classList.toggle('active', i === idx));
+}
+
+
+
+// ── UTILS ──
+function msToTime(ms) {
+  const s = Math.floor(ms / 1000);
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+}
+
+// ── INIT ──
+(async function init() {
+  const params = new URLSearchParams(window.location.search);
+  const code   = params.get('code');
+  const error  = params.get('error');
+
+  if (error) {
+    document.getElementById('authScreen').style.display = 'block';
+    showErr('authError', 'Spotify girişi iptal edildi.');
+    return;
+  }
+
+  if (code) {
+    document.getElementById('authScreen').style.display = 'block';
+    await handleCallback(code);
+    return;
+  }
+
+  const stored = localStorage.getItem('sp_token');
+  if (stored) {
+    accessToken  = stored;
+    tokenExpiry  = parseInt(localStorage.getItem('sp_expiry') || '0');
+    refreshToken = localStorage.getItem('sp_refresh');
+    if (Date.now() > tokenExpiry && refreshToken) await ensureFreshToken();
+    showSetup();
+    return;
+  }
+
+  document.getElementById('authScreen').style.display = 'block';
+})();
+</script>
+</body>
+</html>
