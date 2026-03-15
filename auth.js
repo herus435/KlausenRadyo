@@ -88,7 +88,7 @@ if (code) {
         const seedSet = await analyzer.getSeedSet();
         
         document.getElementById('status').innerText = "Adım 2/4: Last.fm'den çeşitli şarkılar bulunuyor...";
-        const LAST_FM_API_KEY = "0f7e92cbac5a077c1336ccac205b8cf0"; // Kendi anahtarını unutma!
+        const LAST_FM_API_KEY = "3d07fd7d5d965c36f2ae1f8ef5938eaf"; // Kendi anahtarını unutma!
         const recommender = new LastFmRecommender(LAST_FM_API_KEY);
         const candidateSet = await recommender.getRecommendations(seedSet);
         
