@@ -51,13 +51,19 @@ class LastFmRecommender {
     }
 
     async fetchSimilarFromLastFm(trackName, artistName) {
-        // Hataları önlemek için URL Encoding işlemi ve autocorrect parametresi
         const encodedArtist = encodeURIComponent(artistName);
         const encodedTrack = encodeURIComponent(trackName);
-        const url = `https://ws.audioscrobbler.com/2.0/?method=track.getSimilar&artist=${encodedArtist}&track=${encodedTrack}&api_key=${this.apiKey}&format=json&autocorrect=1&limit=10`;
+        
+        // Asıl gitmek istediğimiz Last.fm adresi
+        const targetUrl = `https://ws.audioscrobbler.com/2.0/?method=track.getSimilar&artist=${encodedArtist}&track=${encodedTrack}&api_key=${this.apiKey}&format=json&autocorrect=1&limit=10`;
+
+        // CORS engeline takılmamak için araya ücretsiz ve güvenilir bir vekil sunucu (allorigins) koyuyoruz
+        // targetUrl'yi encodeURIComponent içine almamız çok önemli
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
 
         try {
-            const response = await fetch(url);
+            // İsteği artık Last.fm'e değil, proxy üzerinden atıyoruz
+            const response = await fetch(proxyUrl);
             const data = await response.json();
             
             if (data.similartracks && data.similartracks.track) {
