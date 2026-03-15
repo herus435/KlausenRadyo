@@ -1,6 +1,6 @@
 // Uygulama Kimlik Bilgileri
 const clientId = '87356d185611423b94cc528eba03db91'; // Kendi Client ID'ni yapıştır
-const redirectUri = 'http://127.0.0.1:5500/index.html'; // Test ortamı portuna göre düzenle
+const redirectUri = 'https://herus435.github.io'; // Test ortamı portuna göre düzenle
 
 // İstenen yetkiler (Radyo oynatma, geçmişi okuma ve durumu değiştirme) [cite: 31]
 const scope = 'user-read-recently-played streaming user-read-email user-read-private user-modify-playback-state';
