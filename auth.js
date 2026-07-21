@@ -1,6 +1,6 @@
 // Uygulama Kimlik Bilgileri
-const clientId = '87356d185611423b94cc528eba03db91'; // Kendi Client ID'ni yapıştır
-const redirectUri = 'https://herus435.github.io'; // Test ortamı portuna göre düzenle
+const clientId = 'clientİd'; // Kendi Client ID'ni yapıştır
+const redirectUri = 'portURL'; // Test ortamı portuna göre düzenle
 
 // İstenen yetkiler (Radyo oynatma, geçmişi okuma ve durumu değiştirme) [cite: 31]
 const scope = 'user-read-recently-played streaming user-read-email user-read-private user-modify-playback-state';
@@ -68,10 +68,7 @@ document.getElementById('login-btn').addEventListener('click', redirectToAuthCod
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
-// auth.js içindeki kod bloğunun güncellenmiş hali:
-// auth.js içindeki kod bloğunun güncellenmiş hali:
-// auth.js içindeki kod bloğunun güncellenmiş hali:
-// auth.js içindeki son bölümün GÜNCELLENMİŞ hali:
+
 // auth.js içindeki son bölümün GÜNCELLENMİŞ hali:
 if (code) {
     document.getElementById('login-btn').style.display = 'none';
@@ -88,7 +85,7 @@ if (code) {
         const seedSet = await analyzer.getSeedSet();
         
         document.getElementById('status').innerText = "Adım 2/4: Last.fm'den çeşitli şarkılar bulunuyor...";
-        const LAST_FM_API_KEY = "0f7e92cbac5a077c1336ccac205b8cf0"; // Kendi anahtarını unutma!
+        const LAST_FM_API_KEY = "YOURAPİKEY"; // Kendi anahtarını unutma!
         const recommender = new LastFmRecommender(LAST_FM_API_KEY);
         const candidateSet = await recommender.getRecommendations(seedSet);
         
